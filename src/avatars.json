@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1713186340230,
+    "characterName": "123",
+    "childAge": "123123131",
+    "skinColor": "#000000",
+    "hairStyle": "short",
+    "headShape": "oval",
+    "upperClothing": "shirt",
+    "lowerClothing": "jeans",
+    "createdAt": "2024-04-15T13:05:40.230Z"
+  },
+  {
+    "id": 1713187810842,
+    "characterName": "rob",
+    "childAge": "12",
+    "skinColor": "#ff0000",
+    "hairStyle": "short",
+    "headShape": "oval",
+    "upperClothing": "shirt",
+    "lowerClothing": "jeans",
+    "createdAt": "2024-04-15T13:30:10.842Z"
+  },
+  {
+    "id": 1713191055890,
+    "characterName": "nikita",
+    "childAge": "20",
+    "skinColor": "#000000",
+    "hairStyle": "short",
+    "headShape": "oval",
+    "upperClothing": "shirt",
+    "lowerClothing": "jeans",
+    "createdAt": "2024-04-15T14:24:15.890Z"
+  }
+]
