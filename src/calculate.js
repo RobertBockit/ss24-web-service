@@ -9,9 +9,22 @@ function factorial(n){
     }
 }
 
-function product(n, term = k => k, initial=1){
-    // todo: implement the product `term(initial) * term(initial + 1) * term(initial + 2) * ... * term(initial + d)` with initial + d <= n
-    return 0;
+function product(n, term = k => k, initial = 1) {
+    if(n<0) {
+        throw Error("n<0")
+    }
+    if(n===1) {
+        return 1
+    }
+
+
+    let result = term(initial);
+    for (let i = initial; i <= n; i++) {
+        result *= term(i);
+    }
+    return result;
 }
 
-export {factorial, product}
+export { product };
+
+console.log(product)

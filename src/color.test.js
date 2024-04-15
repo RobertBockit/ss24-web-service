@@ -1,6 +1,7 @@
 import {jest, test, expect} from "@jest/globals"; // this is optional, all three are global variables im runner scope
 import {randomRGBColor} from './color'
-import * as random from './random'
+import {randomInt} from "./random";
+
 
 test ('Random color generates 3-tuple', () => {
     const spyRandomInt = jest.spyOn(random, 'randomInt');
@@ -15,4 +16,19 @@ test ('Random color generates 3-tuple', () => {
     expect(red).toBeLessThanOrEqual(255);
 
     expect(spyRandomInt).toHaveBeenCalledTimes(3);
+});
+
+
+test("Random color returns correct format", () => {
+
+
+    const mockFn = jest.fn().mockReturnValue(100)
+    random.randomInt = mockFn
+
+    const color = randomRGBColor()
+    const [red, green, blue] = number
+
+    expe
+
+
 });
