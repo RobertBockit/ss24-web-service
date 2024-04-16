@@ -9,22 +9,15 @@ function factorial(n){
     }
 }
 
-function product(n, term = k => k, initial = 1) {
-    if(n<0) {
-        throw Error("n<0")
-    }
-    if(n===1) {
-        return 1
-    }
-
-
+function product(n, term = k => k, initial=1){
     let result = term(initial);
-    for (let i = initial; i <= n; i++) {
-        result *= term(i);
+    for(let i = initial + 1; i < n; i++){
+        result *= term(i)
     }
     return result;
 }
 
-export { product };
+export {factorial, product}
 
-console.log(product)
+
+console.log(product(2,(k)=>k*3 ,6))
