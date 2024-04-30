@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "start": "node run src/main.js"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.4",
