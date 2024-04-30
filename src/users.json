@@ -1,0 +1,42 @@
+[
+  {
+    "name": "marco",
+    "username": "email@gmail.com",
+    "password": "$2b$10$xzMTg/75Q2IYRxOEMw/1ROIy5w31xsBtg9wHTQpjKYtO/eUsF9CTa",
+    "role": [
+      "child"
+    ]
+  },
+  {
+    "name": "david",
+    "username": "gmail@gmail.com",
+    "password": "$2b$10$xzMTg/75Q2IYRxOEMw/1ROIy5w31xsBtg9wHTQpjKYtO/eUsF9CTa",
+    "role": [
+      "parent",
+      "child"
+    ]
+  },
+  {
+    "name": "david",
+    "username": "gmail@gmail.com",
+    "password": "$2b$10$xzMTg/75Q2IYRxOEMw/1ROIy5w31xsBtg9wHTQpjKYtO/eUsF9CTa",
+    "role": [
+      "parent",
+      "child"
+    ]
+  },
+  {
+    "name": "rob",
+    "username": "gmailrob@gmail.com",
+    "password": "ababababababa"
+  },
+  {
+    "name": "rob",
+    "username": "gmailrob@gmail.com"
+  },
+  {
+    "name": "rob",
+    "username": "gmailrob@gmail.com",
+    "password": "123"
+  }
+]

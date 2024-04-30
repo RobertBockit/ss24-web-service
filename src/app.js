@@ -1,17 +1,59 @@
 
+import bcrypt from "bcrypt"
 
 import express from "express"
 import fs from "fs"
 import path from "path"
+import Joi from "joi";
+import schema from "./avatarSchema.js"
+import avatarSchema from "./avatarSchema.js";
+import userSchema from "./userSchema.js";
 
 export const app = express()
-app.use(express.json())
+import {v4 as uuid} from "uuid"
+import passport from "passport"
+import {Strategy} from "passport-http-bearer"
+import {BasicStrategy} from "passport-http";
+import {isParent, isChild} from "./roles.js";
+import {
+    createValidator
+} from 'express-joi-validation'
 
+const validator = createValidator()
+
+
+
+
+const user_file = "./users.json"
+
+
+passport.use(new BasicStrategy(
+    async function(userid, password, done) {
+        try {
+            const users = JSON.parse(fs.readFileSync(user_file, 'utf-8'))
+            const user = users.find(user => user.username === userid);
+            if (user) {
+                const isCorrect = await bcrypt.compare(password, user.password)
+                if(isCorrect){done(null, user)}
+            } else {
+
+                done(null, false)
+            }
+        } catch (err) {
+            done(err)
+        }
+    }))
+
+app.use(express.json());
 app.use(express.static(path.join('./public'),{index:false,extensions:['html']}));
 
 
 
-app.get('/api/avatars', (req,res) => {
+
+
+app.get('/api/avatars',
+    (req,res) => {
+
     console.log("2")
     const jsonData = fs.readFileSync(  './avatars.json', 'utf8');
     res.send(jsonData)
@@ -70,15 +112,16 @@ app.delete('/api/avatars/:id', (req,res)=>{
 })
 app.put('/api/avatars/:id', (req,res)=>{
 
-    let id = parseFloat(req.params.id)
+    let id = req.params.id
 
-    const name = req.body.name;
-    const age = req.body.age;
-    const head = req.body.head;
-    const hair = req.body.hair;
-    const hair_color = req.body.hair_color;
-    const t_clothes = req.body.t_clothing;
-    const l_clothes = req.body.l_clothing;
+    const name = req.body.characterName;
+    const age = req.body.childAge;
+    const head = req.body.headShape;
+    const hair = req.body.hairStyle;
+    const hair_color = req.body.skinColor;
+    const t_clothes = req.body.upperClothing;
+    const l_clothes = req.body.lowerClothing;
+
 
 
     const updatedCharacter =  {
@@ -90,6 +133,14 @@ app.put('/api/avatars/:id', (req,res)=>{
         "upperClothing" : t_clothes,
         "lowerClothing" : l_clothes,
     }
+
+    const {error, value} = avatarSchema.validate(updatedCharacter)
+
+    if (error){
+        res.status(400).send(error)
+        return
+    }
+
 
     function updateAvatar(id, updatedCharacter) {
         fs.readFile('./avatars.json', 'utf8', (err, data) => {
@@ -191,21 +242,60 @@ app.get('/avatars/:id', function(req , res){
 
 });
 
+app.post('/api/users',  (req,res) => {
+    let data;
 
-app.post('/api/avatars', (req, res) => {
-    const name = req.body.name;
-    const age = req.body.age;
-    const head = req.body.head;
-    const hair = req.body.hair;
-    const hair_color = req.body.hair_color;
-    const t_clothes = req.body.t_clothing;
-    const l_clothes = req.body.l_clothing;
+    try {
+        const jsonData = fs.readFileSync('users.json', 'utf8');
+        data = JSON.parse(jsonData);
+    } catch (err) {
+        console.error(err);
+        data = [];
+    }
+
+    data.push(req.body);
+
+    const newJsonData = JSON.stringify(data, null, 2);
+
+    fs.writeFileSync('./users.json', newJsonData);
+
+    console.log('New object added to users.json');
+
+    res.status(201).send(req.body)
+})
+
+
+
+app.post('/api/avatars',isParent,  (req, res) => {
+
+    console.log("### REQUEST BODY ###")
+    console.log(req.body)
+    console.log("### END REQUEST BODY ###")
+
+    const name = req.body.characterName;
+    const age = req.body.childAge;
+    const head = req.body.headShape;
+    const hair = req.body.hairStyle;
+    const hair_color = req.body.skinColor;
+    const t_clothes = req.body.upperClothing;
+    const l_clothes = req.body.lowerClothing;
 
     let date_rn = new Date(Date.now()).toISOString()
-    let time_rn = Date.now()
+    let time_rn = uuid()
+
+    const userSent = {
+        "characterName" : name ,
+            "childAge" : age,
+            "skinColor" : hair_color,
+            "hairStyle" : hair,
+            "headShape" : head,
+            "upperClothing" : t_clothes,
+            "lowerClothing" : l_clothes,
+    }
+
     const newObject =  {
         "id" : time_rn,
-        "characterName" : name,
+        "characterName" : name ,
         "childAge" : age,
         "skinColor" : hair_color,
         "hairStyle" : hair,
@@ -214,6 +304,15 @@ app.post('/api/avatars', (req, res) => {
         "lowerClothing" : l_clothes,
         "createdAt": date_rn
     }
+
+    const {error, value} = avatarSchema.validate(req.body)
+
+    if (error){
+        res.status(400).send(error)
+        return
+    }
+
+    console.log(newObject)
 
     let data;
     try {
@@ -232,7 +331,6 @@ app.post('/api/avatars', (req, res) => {
 
     console.log('New object added to avatars.json');
 
-    res.set('Location', '/api/avatars/'+time_rn)
     res.status(201).send(newObject)
 
 
